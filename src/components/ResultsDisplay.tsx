@@ -150,7 +150,7 @@ export function ResultsDisplay({ result, onReset }: ResultsDisplayProps) {
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 bg-red-flag-older rounded"></div>
-                <span><strong>O:</strong> Older age (>50)</span>
+                <span><strong>O:</strong> Older age (&gt;50)</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 bg-red-flag-pattern rounded"></div>
