@@ -1,12 +1,11 @@
-import { OpenAIApi } from '@azure/openai';
+import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
 import { QuestionnaireData, AIResponse } from '../types';
 
 // Azure OpenAI configuration
-const openai = new OpenAIApi({
-  apiKey: import.meta.env.VITE_AZURE_OPENAI_API_KEY,
-  endpoint: `${import.meta.env.VITE_AZURE_OPENAI_ENDPOINT}/openai/deployments/${import.meta.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME}`,
-  apiVersion: '2024-02-15-preview',
-});
+const openai = new OpenAIClient(
+  import.meta.env.VITE_AZURE_OPENAI_ENDPOINT,
+  new AzureKeyCredential(import.meta.env.VITE_AZURE_OPENAI_API_KEY)
+);
 
 const SYSTEM_PROMPT = `You are a medical AI assistant specialized in headache triage using the SNNOOP10 criteria for identifying red flags in headache patients. 
 
@@ -61,17 +60,18 @@ Patient Information:
 Please analyze this headache presentation using SNNOOP10 criteria.
     `;
 
-    const response = await openai.createChatCompletion({
-      model: 'gpt-4', // This will use your deployed model
+    const response = await openai.getChatCompletions(
+      import.meta.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME,
+      {
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPrompt }
       ],
       temperature: 0.3,
-      max_tokens: 1000,
+      maxTokens: 1000,
     });
 
-    const content = response.data.choices[0]?.message?.content;
+    const content = response.choices[0]?.message?.content;
     if (!content) {
       throw new Error('No response from AI model');
     }
