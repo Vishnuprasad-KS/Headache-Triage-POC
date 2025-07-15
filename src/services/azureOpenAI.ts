@@ -1,21 +1,12 @@
-import { OpenAIApi, Configuration } from '@azure/openai';
+import { OpenAIApi } from '@azure/openai';
 import { QuestionnaireData, AIResponse } from '../types';
 
 // Azure OpenAI configuration
-const configuration = new Configuration({
+const openai = new OpenAIApi({
   apiKey: import.meta.env.VITE_AZURE_OPENAI_API_KEY,
-  basePath: `${import.meta.env.VITE_AZURE_OPENAI_ENDPOINT}/openai/deployments/${import.meta.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME}`,
-  baseOptions: {
-    headers: {
-      'api-key': import.meta.env.VITE_AZURE_OPENAI_API_KEY,
-    },
-    params: {
-      'api-version': '2024-02-15-preview',
-    },
-  },
+  endpoint: `${import.meta.env.VITE_AZURE_OPENAI_ENDPOINT}/openai/deployments/${import.meta.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME}`,
+  apiVersion: '2024-02-15-preview',
 });
-
-const openai = new OpenAIApi(configuration);
 
 const SYSTEM_PROMPT = `You are a medical AI assistant specialized in headache triage using the SNNOOP10 criteria for identifying red flags in headache patients. 
 
