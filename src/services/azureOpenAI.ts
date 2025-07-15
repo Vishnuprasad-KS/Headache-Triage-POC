@@ -1,11 +1,4 @@
-import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
 import { QuestionnaireData, AIResponse } from '../types';
-
-// Azure OpenAI configuration
-const openai = new OpenAIClient(
-  import.meta.env.VITE_AZURE_OPENAI_ENDPOINT,
-  new AzureKeyCredential(import.meta.env.VITE_AZURE_OPENAI_API_KEY)
-);
 
 const SYSTEM_PROMPT = `You are a medical AI assistant specialized in headache triage using the SNNOOP10 criteria for identifying red flags in headache patients. 
 
@@ -60,18 +53,26 @@ Patient Information:
 Please analyze this headache presentation using SNNOOP10 criteria.
     `;
 
-    const response = await openai.getChatCompletions(
-      import.meta.env.VITE_AZURE_OPENAI_DEPLOYMENT_NAME,
-      {
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature: 0.3,
-      maxTokens: 1000,
+    const response = await fetch(`${(import.meta as any).env.VITE_BASE_URL}/api/ask`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userPrompt }
+        ]
+      })
     });
 
-    const content = response.choices[0]?.message?.content;
+    if (!response.ok) {
+      throw new Error('Failed to fetch response');
+    }
+
+    const responseData:any = await response.json();
+
+    const content = responseData.choices[0]?.message?.content;
     if (!content) {
       throw new Error('No response from AI model');
     }

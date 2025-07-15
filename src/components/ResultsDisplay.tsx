@@ -1,4 +1,3 @@
-import React from 'react';
 import { AIResponse } from '../types';
 import { AlertTriangle, CheckCircle, Clock, ArrowLeft } from 'lucide-react';
 import { cn } from '../utils/cn';
