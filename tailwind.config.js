@@ -7,6 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        'border': 'rgb(209 213 219)', // gray-300 equivalent
+        'background': '#ffffff',
+        'foreground': '#0f172a', // slate-900 equivalent
+        'ring': '#3b82f6', // blue-500 equivalent
         'red-flag-systemic': '#dc2626',
         'red-flag-neurological': '#ea580c',
         'red-flag-neoplasm': '#7c2d12',
