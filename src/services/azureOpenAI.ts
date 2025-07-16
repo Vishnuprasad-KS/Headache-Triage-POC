@@ -53,7 +53,7 @@ Patient Information:
 Please analyze this headache presentation using SNNOOP10 criteria.
     `;
 
-    const response = await fetch(`${(import.meta as any).env.VITE_BASE_URL}/api/ask`, {
+    const response = await fetch(`${(import.meta as any).env.VITE_BASE_URL}api/ask`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
