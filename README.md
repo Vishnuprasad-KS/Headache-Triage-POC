@@ -1,14 +1,15 @@
 # Headache Triage POC
 
-A React 19 application for headache assessment using the SNNOOP10 criteria and Azure OpenAI integration.
+A React 19 application for headache assessment using the SNNOOP10 criteria and Corti LLM integration.
 
 ## Features
 
 - **Comprehensive Questionnaire**: Detailed form covering all aspects of headache presentation
 - **SNNOOP10 Analysis**: AI-powered assessment using established red flag criteria
 - **Color-Coded Results**: Visual representation of risk levels and categories
-- **Azure OpenAI Integration**: Leverages GPT-4 for medical analysis
+- **Corti LLM Integration**: Leverages Corti's medical AI for specialized headache analysis
 - **Responsive Design**: Works seamlessly across all devices
+- **Node.js Backend**: Express server handling API requests
 - **Medical Disclaimers**: Appropriate warnings about the tool's limitations
 
 ## SNNOOP10 Red Flags
@@ -32,25 +33,34 @@ The application assesses headaches based on the SNNOOP10 criteria:
    npm install
    ```
 
-2. **Configure Azure OpenAI**:
+2. **Configure Corti LLM**:
    - Copy `.env.example` to `.env`
-   - Fill in your Azure OpenAI credentials:
+   - Fill in your Corti API credentials:
      ```
-     VITE_AZURE_OPENAI_API_KEY=your_api_key_here
-     VITE_AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com
-     VITE_AZURE_OPENAI_DEPLOYMENT_NAME=your_deployment_name
+     CORTI_API_KEY=your_corti_api_key_here
+     CORTI_API_URL=https://api.corti.ai/v1/chat/completions
+     CORTI_MODEL=corti-chat
      ```
 
-3. **Run the Application**:
+3. **Run the Full Application**:
    ```bash
+   npm run dev:full
+   ```
+   
+   Or run frontend and backend separately:
+   ```bash
+   # Terminal 1 - Backend
+   npm run server
+   
+   # Terminal 2 - Frontend
    npm run dev
    ```
 
-## Azure OpenAI Setup
+## Corti LLM Setup
 
-1. Create an Azure OpenAI resource in the Azure portal
-2. Deploy a GPT-4 model
-3. Get your API key and endpoint from the Azure portal
+1. Sign up for a Corti account at [corti.ai](https://corti.ai)
+2. Get your API key from the Corti dashboard
+3. Configure the model and endpoint in your `.env` file
 4. Update the `.env` file with your credentials
 
 ## Usage
@@ -85,7 +95,8 @@ This application is for educational purposes only and should not replace profess
 - **React 19**: Latest React with modern features
 - **TypeScript**: Type-safe development
 - **Tailwind CSS**: Utility-first styling
-- **Azure OpenAI**: AI-powered medical analysis
+- **Node.js & Express**: Backend API server
+- **Corti LLM**: Specialized medical AI for headache analysis
 - **Vite**: Fast development and build tool
 - **Lucide React**: Modern icon library
 
@@ -97,3 +108,19 @@ The application follows modern React patterns with:
 - Modular component architecture
 - Responsive design principles
 - Accessibility considerations
+
+## API Endpoints
+
+- `GET /health` - Health check endpoint
+- `POST /api/ask` - Headache analysis using Corti LLM
+
+## Environment Variables
+
+### Frontend (.env)
+- `VITE_BASE_URL` - Backend server URL (default: http://localhost:8000/)
+
+### Backend (.env)
+- `CORTI_API_KEY` - Your Corti API key
+- `CORTI_API_URL` - Corti API endpoint
+- `CORTI_MODEL` - Corti model to use
+- `PORT` - Server port (default: 8000)

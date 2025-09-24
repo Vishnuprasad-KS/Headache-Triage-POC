@@ -1,6 +1,6 @@
 import { QuestionnaireData, AIResponse } from '../types';
 
-const SYSTEM_PROMPT = `You are a medical AI assistant specialized in headache triage using the SNNOOP10 criteria for identifying red flags in headache patients. 
+const SYSTEM_PROMPT = `You are a medical AI assistant specialized in headache triage using the SNNOOP10 criteria for identifying red flags in headache patients.
 
 SNNOOP10 Red Flags:
 - S: Systemic symptoms (fever, weight loss, etc.)
@@ -53,7 +53,8 @@ Patient Information:
 Please analyze this headache presentation using SNNOOP10 criteria.
     `;
 
-    const response = await fetch(`${(import.meta as any).env.VITE_BASE_URL}api/ask`, {
+    const baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:8000/';
+    const response = await fetch(`${baseUrl}api/ask`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -67,10 +68,11 @@ Please analyze this headache presentation using SNNOOP10 criteria.
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch response');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch response`);
     }
 
-    const responseData:any = await response.json();
+    const responseData: any = await response.json();
 
     const content = responseData.choices[0]?.message?.content;
     if (!content) {
@@ -79,18 +81,22 @@ Please analyze this headache presentation using SNNOOP10 criteria.
 
     return JSON.parse(content) as AIResponse;
   } catch (error) {
-    console.error('Error calling Azure OpenAI:', error);
+    console.error('Error calling Corti LLM:', error);
     
     // Fallback response for demo purposes
     return {
       analysis: {
         category: 'low',
         riskLevel: 'low',
-        explanation: 'Unable to connect to AI service. This is a demo response.',
-        recommendations: ['Please configure Azure OpenAI credentials', 'Consult healthcare provider'],
+        explanation: 'Unable to connect to Corti LLM service. This is a demo response showing how the system would work.',
+        recommendations: [
+          'Please configure Corti API credentials in your .env file',
+          'Consult with a healthcare provider for proper medical evaluation',
+          'Monitor symptoms and seek immediate care if they worsen'
+        ],
         urgency: 'routine'
       },
-      reasoning: 'AI service unavailable - demo mode active'
+      reasoning: 'Corti LLM service unavailable - demo mode active. Please check your API configuration and network connection.'
     };
   }
 }
